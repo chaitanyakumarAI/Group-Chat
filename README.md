@@ -51,9 +51,4 @@ pip install -r requirements.txt
 nohup python3 server.py > server.log 2>&1 &
 ```
 
----
 
-## 📄 Submission Documentation
-The repository contains the complete Architecture & Technical Implementation Report:
-- [`Group_Chat_Architecture_Report.md`](./Group_Chat_Architecture_Report.md)
-- [`Group_Chat_Architecture_Report.pdf`](./Group_Chat_Architecture_Report.pdf)
