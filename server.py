@@ -167,9 +167,11 @@ def on_typing(data: dict):
 
 # ─── Entry Point ─────────────────────────────────────────────────────────────
 if __name__ == "__main__":
+    import os
+    port = int(os.environ.get("PORT", 5237))
     print("=" * 55)
     print("  Real-Time Group Chat Server")
-    print("  Running on http://0.0.0.0:5000")
+    print(f"  Running on http://0.0.0.0:{port}")
     print("  Share your LAN IP with teammates!")
     print("=" * 55)
-    socketio.run(app, host="0.0.0.0", port=5000, debug=False, allow_unsafe_werkzeug=True)
+    socketio.run(app, host="0.0.0.0", port=port, debug=False, allow_unsafe_werkzeug=True)
