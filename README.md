@@ -89,7 +89,7 @@ python3 -c "import sqlite3; c=sqlite3.connect('chat.db'); print(c.execute('SELEC
 
 To check the SSH-deployed server from a **different** machine (e.g. your own laptop, not logged into the server):
 ```bash
-curl http://10.1.75.51:5000/health
+curl http://10.1.75.51:5237/health
 ```
 
 To confirm persistence: send a message, stop the server (`Ctrl+C`), restart it, and rejoin — earlier messages reappear via the `history` event.
