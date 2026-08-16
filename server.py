@@ -2,7 +2,7 @@
 Persistent and Secure Group Chat — Backend Server
 Flask + Flask-SocketIO (WebSockets) + SQLite + AES-GCM + Ed25519 signatures
 
-Extends last week's real-time chat with:
+Extends real-time chat with:
   1. Persistence     -> messages stored in SQLite (chat.db)
   2. Confidentiality -> AES-256-GCM encryption before storage
   3. Integrity       -> AES-GCM authentication tag detects tampering
@@ -27,7 +27,7 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import (
 from cryptography.hazmat.primitives import serialization
 from cryptography.exceptions import InvalidSignature, InvalidTag
 
-# ─── App Configuration ───────────────────────────────────────────────────────
+# ─── App Configuration ───
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "groupchat_secret_key_2024"
 
@@ -49,7 +49,7 @@ KEY_FILE = os.path.join(BASE_DIR, "secret.key")
 KEYS_DIR = os.path.join(BASE_DIR, "keys")
 os.makedirs(KEYS_DIR, exist_ok=True)
 
-# ─── In-Memory State ─────────────────────────────────────────────────────────
+# ─── In-Memory State ───
 connected_users: dict[str, dict] = {}       # sid -> {"username": str}
 signing_keys: dict[str, Ed25519PrivateKey] = {}  # username -> loaded private key
 db_lock = threading.Lock()
@@ -63,7 +63,7 @@ def now() -> str:
     return datetime.now().strftime("%H:%M:%S")
 
 
-# ─── Database Setup (Persistence) ────────────────────────────────────────────
+# ─── Database Setup (Persistence) ───
 conn = sqlite3.connect(DB_PATH, check_same_thread=False)
 conn.execute("""
     CREATE TABLE IF NOT EXISTS messages (
@@ -85,7 +85,7 @@ conn.execute("""
 conn.commit()
 
 
-# ─── Symmetric Key (Confidentiality) ─────────────────────────────────────────
+# ─── Symmetric Key (Confidentiality) ───
 # A single AES-256 key protects the room. It is generated once and persisted
 # to disk so that history stored before a restart can still be decrypted.
 if os.path.exists(KEY_FILE):
@@ -113,7 +113,7 @@ def decrypt_message(ciphertext_b64: str, nonce_b64: str) -> str:
     return aesgcm.decrypt(nonce, ciphertext, None).decode()
 
 
-# ─── Per-User Signing Keys (Authenticity) ────────────────────────────────────
+# ─── Per-User Signing Keys (Authenticity) ───
 def get_or_create_keypair(username: str) -> Ed25519PrivateKey:
     """Load an existing Ed25519 keypair for this username, or generate a new one.
     Private key persists to keys/<username>.pem so identity survives reconnects.
@@ -170,7 +170,7 @@ def verify_message(username: str, plaintext: str, signature_b64: str) -> bool:
         return False
 
 
-# ─── Persistence Helpers ─────────────────────────────────────────────────────
+# ─── Persistence Helpers ───
 def save_message(room_id: str, sender: str, ciphertext: str, nonce: str, signature: str):
     with db_lock:
         conn.execute(
@@ -213,7 +213,7 @@ def get_history(room_id: str) -> list[dict]:
     return history
 
 
-# ─── HTTP Routes ─────────────────────────────────────────────────────────────
+# ─── HTTP Routes ───
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -229,7 +229,7 @@ def health():
     }
 
 
-# ─── SocketIO Events ─────────────────────────────────────────────────────────
+# ─── SocketIO Events ────
 @socketio.on("connect")
 def on_connect():
     log.info(f"New connection: {request.sid}")
@@ -337,7 +337,7 @@ def on_typing(data: dict):
         }, to=ROOM, include_self=False)
 
 
-# ─── Entry Point ─────────────────────────────────────────────────────────────
+# ─── Entry Point ───
 if __name__ == "__main__":
     print("=" * 55)
     print("  Secure Persistent Group Chat Server")
