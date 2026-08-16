@@ -46,20 +46,35 @@ python3 server.py
 Open `http://localhost:5000` in your browser. On first run, `chat.db`, `secret.key`, and a `keys/` folder are created automatically — no manual setup needed.
 
 ### 2. Deploy on Remote SSH Server
+
+**Option A — clone directly on the server** (recommended if the user running it already has SSH access):
 ```bash
-# Copy files to server
+ssh -p 2237 student@10.1.75.51
+git clone https://github.com/chaitanyakumarAI/Group-Chat.git ~/chat_app
+cd ~/chat_app
+pip install -r requirements.txt
+nohup python3 server.py > server.log 2>&1 &
+```
+
+**Option B — copy local files via scp** (use this if you have uncommitted local changes you want deployed as-is):
+```bash
+# From your own machine:
 scp -P 2237 -r . student@10.1.75.51:~/chat_app
 
-# Connect and run
+# Then connect and run:
 ssh -p 2237 student@10.1.75.51
 cd ~/chat_app
 pip install -r requirements.txt
 nohup python3 server.py > server.log 2>&1 &
 ```
 
+> **Note:** each deployment (local machine, SSH server) generates its **own independent** `chat.db`, `secret.key`, and `keys/` — these are never shared or committed to git. A fresh clone/copy always starts with empty chat history.
+
 ---
 
 ## 🔍 Verifying It Works
+
+Run these **on the same machine where the server is running** (your own laptop, or the SSH server once you're logged into it):
 
 ```bash
 # Health check
@@ -70,6 +85,11 @@ python3 -c "import sqlite3; c=sqlite3.connect('chat.db'); print(c.execute('SELEC
 
 # Confirm each sender has a signing keypair
 python3 -c "import sqlite3; c=sqlite3.connect('chat.db'); print(c.execute('SELECT * FROM signing_keys').fetchall())"
+```
+
+To check the SSH-deployed server from a **different** machine (e.g. your own laptop, not logged into the server):
+```bash
+curl http://10.1.75.51:5000/health
 ```
 
 To confirm persistence: send a message, stop the server (`Ctrl+C`), restart it, and rejoin — earlier messages reappear via the `history` event.
@@ -92,14 +112,14 @@ python3 demo_tamper.py
 
 ```
 Group-Chat/
-├── server.py            # Flask-SocketIO server: persistence, encryption, signing
-├── demo_tamper.py        # Corrupts a stored ciphertext to demo tamper detection
-├── templates/index.html  # Chat UI (real-time + history rendering)
+├── server.py             # Flask-SocketIO server: persistence, encryption, signing
+├── demo_tamper.py         # Corrupts a stored ciphertext to demo tamper detection
+├── templates/index.html   # Chat UI (real-time + history rendering)
 ├── requirements.txt
-├── .gitignore             # Excludes chat.db, secret.key, keys/ (never commit secrets)
-├── chat.db*               # Auto-generated SQLite database (not committed)
-├── secret.key*            # Auto-generated AES-256 key (not committed)
-└── keys/*                 # Auto-generated per-user Ed25519 private keys (not committed)
+├── .gitignore              # Excludes chat.db, secret.key, keys/ (never commit secrets)
+├── chat.db*                # Auto-generated SQLite database (not committed)
+├── secret.key*             # Auto-generated AES-256 key (not committed)
+└── keys/*                  # Auto-generated per-user Ed25519 private keys (not committed)
 
 * generated automatically on first run, excluded from git
 ```
