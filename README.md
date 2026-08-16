@@ -78,7 +78,7 @@ Run these **on the same machine where the server is running** (your own laptop, 
 
 ```bash
 # Health check
-curl http://localhost:5000/health
+curl http://localhost:5237/health
 
 # Confirm messages are stored as ciphertext, not plaintext
 python3 -c "import sqlite3; c=sqlite3.connect('chat.db'); print(c.execute('SELECT sender, ciphertext FROM messages').fetchall())"
