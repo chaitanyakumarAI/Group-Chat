@@ -801,11 +801,11 @@
 
       let badge = "";
       if (tampered) {
-        badge = `<span style="color:#f87171;font-size:0.72rem;font-weight:700;">⚠ TAMPER DETECTED</span>`;
+        badge = `<span style="color:#f87171;font-size:0.72rem;font-weight:700;">TAMPER DETECTED</span>`;
       } else if (sigValid) {
-        badge = `<span style="color:#34d399;font-size:0.72rem;">🔒 encrypted · ✔ signature verified</span>`;
+        badge = "";
       } else {
-        badge = `<span style="color:#f87171;font-size:0.72rem;font-weight:700;">✘ signature INVALID</span>`;
+        badge = `<span style="color:#f87171;font-size:0.72rem;font-weight:700;">signature INVALID</span>`;
       }
 
       row.className = `message-row ${isSelf ? 'self' : 'other'}`;
