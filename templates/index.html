@@ -717,6 +717,11 @@
       appendMessage(data);
     });
 
+    socket.on("history", (data) => {
+      // Persistence: render decrypted + signature-verified chat history on join
+      (data.messages || []).forEach(msg => appendMessage(msg, true));
+    });
+
     socket.on("typing", (data) => {
       const display = document.getElementById("typingDisplay");
       if (data.is_typing) {
@@ -786,10 +791,22 @@
       area.scrollTop = area.scrollHeight;
     }
 
-    function appendMessage(data) {
+    function appendMessage(data, fromHistory = false) {
       const area = document.getElementById("messagesArea");
       const row = document.createElement("div");
       const isSelf = data.username === myUsername;
+
+      const tampered = !!data.tampered;
+      const sigValid = data.signature_valid !== false;
+
+      let badge = "";
+      if (tampered) {
+        badge = `<span style="color:#f87171;font-size:0.72rem;font-weight:700;">⚠ TAMPER DETECTED</span>`;
+      } else if (sigValid) {
+        badge = `<span style="color:#34d399;font-size:0.72rem;">🔒 encrypted · ✔ signature verified</span>`;
+      } else {
+        badge = `<span style="color:#f87171;font-size:0.72rem;font-weight:700;">✘ signature INVALID</span>`;
+      }
 
       row.className = `message-row ${isSelf ? 'self' : 'other'}`;
       row.innerHTML = `
@@ -797,7 +814,8 @@
           <span>${isSelf ? 'You' : escapeHtml(data.username)}</span>
           <span>${data.timestamp}</span>
         </div>
-        <div class="message-bubble">${escapeHtml(data.text)}</div>
+        <div class="message-bubble" style="${tampered ? 'border:1px solid #f87171;' : ''}">${escapeHtml(data.text)}</div>
+        <div class="message-meta" style="margin-top:2px;">${badge}</div>
       `;
 
       area.appendChild(row);

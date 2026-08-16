@@ -4,3 +4,6 @@ venv/
 .venv/
 server.log
 .DS_Store
+chat.db
+secret.key
+keys/
