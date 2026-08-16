@@ -32,8 +32,8 @@ def create_report():
         'DocTitle',
         parent=styles['Heading1'],
         fontName='Helvetica-Bold',
-        fontSize=22,
-        leading=26,
+        fontSize=20,
+        leading=24,
         textColor=PRIMARY,
         spaceAfter=4
     )
@@ -42,54 +42,54 @@ def create_report():
         'DocSubtitle',
         parent=styles['Normal'],
         fontName='Helvetica',
-        fontSize=11,
-        leading=15,
+        fontSize=10,
+        leading=14,
         textColor=MUTED_TEXT,
-        spaceAfter=12
+        spaceAfter=10
     )
 
     heading1_style = ParagraphStyle(
         'Heading1_Custom',
         parent=styles['Heading2'],
         fontName='Helvetica-Bold',
-        fontSize=13,
-        leading=16,
+        fontSize=12,
+        leading=15,
         textColor=SECONDARY,
-        spaceBefore=12,
-        spaceAfter=6
+        spaceBefore=10,
+        spaceAfter=4
     )
 
     body_style = ParagraphStyle(
         'Body_Custom',
         parent=styles['Normal'],
         fontName='Helvetica',
-        fontSize=9,
-        leading=13,
+        fontSize=8.5,
+        leading=12,
         textColor=DARK_TEXT,
-        spaceAfter=6
+        spaceAfter=4
     )
 
     code_style = ParagraphStyle(
         'Code_Custom',
         parent=styles['Code'],
         fontName='Courier',
-        fontSize=8,
-        leading=11,
+        fontSize=7.5,
+        leading=10,
         textColor=colors.HexColor("#0f172a"),
         backColor=BG_LIGHT,
         borderColor=colors.HexColor("#cbd5e1"),
         borderWidth=0.5,
-        borderPadding=6,
-        spaceBefore=4,
-        spaceAfter=6
+        borderPadding=4,
+        spaceBefore=3,
+        spaceAfter=4
     )
 
     highlight_box_style = ParagraphStyle(
         'Highlight_Custom',
         parent=body_style,
         fontName='Helvetica-Bold',
-        fontSize=9.5,
-        leading=13,
+        fontSize=9,
+        leading=12,
         textColor=colors.HexColor("#0369a1")
     )
 
@@ -97,8 +97,8 @@ def create_report():
 
     # Document Header
     story.append(Paragraph("Real-Time Group Chat Application", title_style))
-    story.append(Paragraph("Computer System Design (CSD) — Assignment 4 | Technical & Deployment Report", subtitle_style))
-    story.append(HRFlowable(width="100%", thickness=1.5, color=SECONDARY, spaceAfter=12))
+    story.append(Paragraph("Computer System Design (CSD) — Assignment 4 | Comprehensive Technical & Team Contribution Report", subtitle_style))
+    story.append(HRFlowable(width="100%", thickness=1.5, color=SECONDARY, spaceAfter=10))
 
     # General Information Table
     info_data = [
@@ -111,11 +111,11 @@ def create_report():
         ('BACKGROUND', (0,0), (-1,-1), colors.HexColor("#f1f5f9")),
         ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#cbd5e1")),
         ('INNERGRID', (0,0), (-1,-1), 0.5, colors.HexColor("#e2e8f0")),
-        ('PADDING', (0,0), (-1,-1), 6),
+        ('PADDING', (0,0), (-1,-1), 5),
         ('VALIGN', (0,0), (-1,-1), 'MIDDLE')
     ]))
     story.append(t_info)
-    story.append(Spacer(1, 10))
+    story.append(Spacer(1, 8))
 
     # Section 1: Executive Summary & Network Routing
     story.append(Paragraph("1. Executive Summary & Lab Network Mapping", heading1_style))
@@ -129,31 +129,31 @@ def create_report():
         "<font color='#0284c7'><b>http://10.1.75.51:5237/</b></font>."
     )
     story.append(Paragraph(exec_summary_text, body_style))
-    story.append(Spacer(1, 8))
+    story.append(Spacer(1, 6))
 
     # Section 2: Laboratory Team Information & SSH Server Allocation
-    story.append(Paragraph("2. Group Members & SSH Server Allotment", heading1_style))
+    story.append(Paragraph("2. Team Members & Key Technical Contributions", heading1_style))
     team_data = [
-        ["Role / Designation", "Student Name", "Roll Number", "SSH Connection Server", "Access URL"],
-        ["Group Head (Host)", "Ranga Chandra Naga Venkata Chaitanya Kumar", "12341740", "ssh -p 2237 student@10.1.75.51", "http://10.1.75.51:5237/"],
-        ["Member 2", "Bhukya Raju", "12340520", "ssh -p 2238 student@10.1.75.51", "http://10.1.75.51:5237/"],
-        ["Member 3", "V.G.N. Harshitha", "12342310", "ssh -p 2239 student@10.1.75.51", "http://10.1.75.51:5237/"],
-        ["Member 4", "Maloth Madhu", "12341370", "ssh -p 2240 student@10.1.75.51", "http://10.1.75.51:5237/"]
+        ["Role / Designation", "Student Name", "Roll No.", "SSH Server", "Key Technical Contribution"],
+        ["Group Head (Host)", "Ranga Chandra Naga Venkata Chaitanya Kumar", "12341740", "ssh -p 2237", "Backend Architecture, Flask-SocketIO Core, AES-256-GCM Encryption & Ed25519 Signature Pipeline, SSH Daemon."],
+        ["Member 2", "Bhukya Raju", "12340520", "ssh -p 2238", "Front-End UI Design, Cyberpunk Aurora Glassmorphism Theme, Socket.IO Client Event Listeners, Dynamic Avatar Generator."],
+        ["Member 3", "V.G.N. Harshitha", "12342310", "ssh -p 2239", "Database Schema Architecture (chat.db), SQLite Message Persistence Engine, Reconnection State Management & History Loading."],
+        ["Member 4", "Maloth Madhu", "12341370", "ssh -p 2240", "Multi-Client Integration & Testing across SSH Machines (10.1.75.51:5237), Graceful Disconnection Handling, SQLite Queries."]
     ]
-    t_team = Table(team_data, colWidths=[90, 160, 65, 125, 90])
+    t_team = Table(team_data, colWidths=[85, 140, 50, 65, 190])
     t_team.setStyle(TableStyle([
         ('BACKGROUND', (0,0), (-1,0), PRIMARY),
         ('TEXTCOLOR', (0,0), (-1,0), colors.white),
         ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
-        ('FONTSIZE', (0,0), (-1,-1), 8),
+        ('FONTSIZE', (0,0), (-1,-1), 7.5),
         ('BACKGROUND', (0,1), (-1,-1), colors.white),
         ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#94a3b8")),
         ('INNERGRID', (0,0), (-1,-1), 0.5, colors.HexColor("#cbd5e1")),
-        ('PADDING', (0,0), (-1,-1), 5),
+        ('PADDING', (0,0), (-1,-1), 4),
         ('VALIGN', (0,0), (-1,-1), 'MIDDLE')
     ]))
     story.append(t_team)
-    story.append(Spacer(1, 10))
+    story.append(Spacer(1, 8))
 
     # Section 3: Feature Verification Matrix
     story.append(Paragraph("3. Feature Coverage & Requirement Verification", heading1_style))
@@ -168,34 +168,36 @@ def create_report():
         ["Authenticity (Ed25519)", "Cryptographic digital signature per user stored & verified", "VERIFIED"],
         ["Public TA Access URL", "Mapped external port forwarded to http://10.1.75.51:5237/", "VERIFIED"]
     ]
-    t_req = Table(req_data, colWidths=[140, 310, 80])
+    t_req = Table(req_data, colWidths=[130, 320, 80])
     t_req.setStyle(TableStyle([
         ('BACKGROUND', (0,0), (-1,0), SECONDARY),
         ('TEXTCOLOR', (0,0), (-1,0), colors.white),
         ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
-        ('FONTSIZE', (0,0), (-1,-1), 8),
+        ('FONTSIZE', (0,0), (-1,-1), 7.5),
         ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#94a3b8")),
         ('INNERGRID', (0,0), (-1,-1), 0.5, colors.HexColor("#cbd5e1")),
-        ('PADDING', (0,0), (-1,-1), 4),
+        ('PADDING', (0,0), (-1,-1), 3),
         ('TEXTCOLOR', (2,1), (2,-1), colors.HexColor("#16a34a")),
         ('FONTNAME', (2,1), (2,-1), 'Helvetica-Bold'),
         ('ALIGN', (2,0), (2,-1), 'CENTER')
     ]))
     story.append(t_req)
-    story.append(Spacer(1, 10))
-
-    # Section 4: System Architecture Workflow
-    story.append(Paragraph("4. System Architecture Workflow", heading1_style))
-    arch_box = (
-        "<b>End-to-End System Flow:</b><br/>"
-        "1. <b>Client Frontend:</b> Users connect via Socket.IO client interface over <code>http://10.1.75.51:5237/</code>.<br/>"
-        "2. <b>Port Forwarding:</b> Public port <code>5237</code> routes connection to internal Flask port <code>5000</code>.<br/>"
-        "3. <b>WebSocket Handler (Flask-SocketIO):</b> Event-driven handling of join, disconnect, typing, and message events.<br/>"
-        "4. <b>Cryptographic Security:</b> AES-256-GCM encrypts plaintext; Ed25519 private key signs sender message.<br/>"
-        "5. <b>SQLite Database Persistence:</b> Writes record into <code>chat.db</code> (tables: <code>messages</code>, <code>signing_keys</code>)."
-    )
-    story.append(Paragraph(arch_box, code_style))
     story.append(Spacer(1, 8))
+
+    # Section 4: Application Screenshots & Demonstration Placeholders
+    story.append(Paragraph("4. Application Screenshots & Visual Proof Placeholders", heading1_style))
+    shots = [
+        "Screenshot 1 Placeholder: Real-Time Chat Interface on http://10.1.75.51:5237/ (Multi-user chat & active sidebar)",
+        "Screenshot 2 Placeholder: User Join Modal & Unique Username Validation Screen",
+        "Screenshot 3 Placeholder: SQLite Database Inspection Terminal (showing AES-256-GCM ciphertexts & Ed25519 signatures)",
+        "Screenshot 4 Placeholder: SSH Host Background Daemon Process Running (nohup python3 server.py)"
+    ]
+    for shot in shots:
+        p_shot = Paragraph(f"📸 <b>{shot}</b><br/><font color='#94a3b8'>[ Paste Screenshot Here ]</font>", code_style)
+        story.append(p_shot)
+        story.append(Spacer(1, 2))
+
+    story.append(Spacer(1, 6))
 
     # Section 5: Database Schema & Query Guide
     story.append(Paragraph("5. Database Verification Commands (SSH Host)", heading1_style))
@@ -206,7 +208,7 @@ def create_report():
         "<code>sqlite3 ~/chat_app/chat.db \"SELECT username, public_key FROM signing_keys;\"</code>"
     )
     story.append(Paragraph(db_text, body_style))
-    story.append(Spacer(1, 10))
+    story.append(Spacer(1, 8))
 
     # Section 6: Submission Links
     story.append(Paragraph("6. Official Submission Details", heading1_style))

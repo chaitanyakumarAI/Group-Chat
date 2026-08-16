@@ -11,6 +11,30 @@ def set_cell_background(cell, fill_hex):
     shd = parse_xml(f'<w:shd {nsdecls("w")} w:fill="{fill_hex}"/>')
     tcPr.append(shd)
 
+def add_screenshot_box(doc, caption_text):
+    tbl = doc.add_table(rows=1, cols=1)
+    tbl.alignment = WD_TABLE_ALIGNMENT.CENTER
+    cell = tbl.rows[0].cells[0]
+    set_cell_background(cell, "F8FAFC")
+    
+    p = cell.paragraphs[0]
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p.paragraph_format.space_before = Pt(12)
+    p.paragraph_format.space_after = Pt(6)
+    
+    r1 = p.add_run("📸 " + caption_text + "\n")
+    r1.font.bold = True
+    r1.font.size = Pt(9.5)
+    r1.font.color.rgb = RGBColor(0x02, 0x84, 0xC7)
+    
+    r2 = p.add_run("[ Paste Screenshot Here ]")
+    r2.font.italic = True
+    r2.font.size = Pt(9)
+    r2.font.color.rgb = RGBColor(0x94, 0xA3, 0xB8)
+    
+    p_spacer = doc.add_paragraph()
+    p_spacer.paragraph_format.space_after = Pt(6)
+
 def create_docx_report():
     doc_path = os.path.join(os.path.dirname(__file__), "Group_Chat_Architecture_Report.docx")
     doc = docx.Document()
@@ -32,7 +56,7 @@ def create_docx_report():
     r_title.font.color.rgb = RGBColor(0x1E, 0x1B, 0x4B)
 
     p_sub = doc.add_paragraph()
-    r_sub = p_sub.add_run("Computer System Design (CSD) — Assignment 4 | Technical & Deployment Report")
+    r_sub = p_sub.add_run("Computer System Design (CSD) — Assignment 4 | Comprehensive Technical & Team Contribution Report")
     r_sub.font.name = "Arial"
     r_sub.font.size = Pt(11)
     r_sub.font.color.rgb = RGBColor(0x4F, 0x46, 0xE5)
@@ -44,7 +68,7 @@ def create_docx_report():
     info_table.alignment = WD_TABLE_ALIGNMENT.CENTER
     info_data = [
         [("Course", "Computer System Design (CSD)"), ("Assignment", "Assignment 4")],
-        [("Host Machine", "student@10.1.75.51 (Port 2237)"), ("Internal Server Port", "5000")],
+        [("Host SSH Machine", "student@10.1.75.51 (Port 2237)"), ("Internal Server Port", "5000")],
         [("Public TA Testing URL", "http://10.1.75.51:5237/"), ("Tech Stack", "Flask, Flask-SocketIO, SQLite, AES-256-GCM, Ed25519")]
     ]
 
@@ -91,16 +115,16 @@ def create_docx_report():
 
     doc.add_paragraph()
 
-    # Section 2: Team Members Table
+    # Section 2: Team Members & Contributions
     h2 = doc.add_paragraph()
-    r_h2 = h2.add_run("2. Group Members & SSH Server Allotment")
+    r_h2 = h2.add_run("2. Team Members & Individual Contributions")
     r_h2.font.bold = True
     r_h2.font.size = Pt(13)
     r_h2.font.color.rgb = RGBColor(0x1E, 0x1B, 0x4B)
 
     team_table = doc.add_table(rows=5, cols=5)
     team_table.alignment = WD_TABLE_ALIGNMENT.CENTER
-    headers = ["Role / Designation", "Student Member Name", "Roll Number", "SSH Connection Command", "Access URL"]
+    headers = ["Role / Designation", "Student Member Name", "Roll Number", "SSH Machine Command", "Key Technical Contribution"]
     
     # Format Headers
     hdr_cells = team_table.rows[0].cells
@@ -113,10 +137,10 @@ def create_docx_report():
         r.font.size = Pt(9)
 
     members_data = [
-        ("Group Head (Host)", "Ranga Chandra Naga Venkata Chaitanya Kumar", "12341740", "ssh -p 2237 student@10.1.75.51", "http://10.1.75.51:5237/"),
-        ("Member 2", "Bhukya Raju", "12340520", "ssh -p 2238 student@10.1.75.51", "http://10.1.75.51:5237/"),
-        ("Member 3", "V.G.N. Harshitha", "12342310", "ssh -p 2239 student@10.1.75.51", "http://10.1.75.51:5237/"),
-        ("Member 4", "Maloth Madhu", "12341370", "ssh -p 2240 student@10.1.75.51", "http://10.1.75.51:5237/")
+        ("Group Head (Host)", "Ranga Chandra Naga Venkata Chaitanya Kumar", "12341740", "ssh -p 2237 student@10.1.75.51", "Backend System Architecture, Flask-SocketIO Core, AES-256-GCM & Ed25519 Cryptographic Pipeline, SSH Server Deployment & Daemon Management."),
+        ("Member 2", "Bhukya Raju", "12340520", "ssh -p 2238 student@10.1.75.51", "Front-End UI Design, Cyberpunk Aurora Glassmorphism Theme, Socket.IO Client Event Listeners, Dynamic Gradient Avatar Generator."),
+        ("Member 3", "V.G.N. Harshitha", "12342310", "ssh -p 2239 student@10.1.75.51", "Database Schema Architecture (chat.db), SQLite Message Persistence Engine, Reconnection State Management & History Pre-loading."),
+        ("Member 4", "Maloth Madhu", "12341370", "ssh -p 2240 student@10.1.75.51", "Multi-Client Integration & Testing across SSH Machines (10.1.75.51:5237), Graceful Disconnection Handling, SQLite Inspection Scripts.")
     ]
 
     for r_idx, row in enumerate(members_data):
@@ -130,7 +154,32 @@ def create_docx_report():
 
     doc.add_paragraph()
 
-    # Section 3: Requirement Matrix
+    # Section 3: Detailed Individual Responsibilities Breakdown
+    h2_sub = doc.add_paragraph()
+    r_h2sub = h2_sub.add_run("Detailed Task Breakdown:")
+    r_h2sub.font.bold = True
+    r_h2sub.font.size = Pt(11)
+    r_h2sub.font.color.rgb = RGBColor(0x4F, 0x46, 0xE5)
+
+    contrib_bullets = [
+        ("Ranga Chandra Naga Venkata Chaitanya Kumar (12341740): ", "Designed the core Flask-SocketIO architecture, implemented server-side room management, integrated AES-256-GCM symmetric encryption and per-user Ed25519 digital signature signing/verification, and managed SSH server deployment on student@10.1.75.51:2237."),
+        ("Bhukya Raju (12340520): ", "Developed the single-page responsive UI using HTML5, CSS3, and JavaScript, designed the Cyberpunk Aurora dark-mode glassmorphic theme with glowing ambient mesh blobs, and created dynamic user avatar color generators."),
+        ("V.G.N. Harshitha (12342310): ", "Architected the SQLite database layer (chat.db) with tables for messages and user public keys, implemented message history pre-loading on user join, and ensured data integrity during server restarts."),
+        ("Maloth Madhu (12341370): ", "Executed end-to-end integration testing across 4 lab client SSH machines, verified port forwarding (5000 -> 5237), implemented edge-case socket disconnection handling, and documented SQLite database inspection queries.")
+    ]
+
+    for title, desc in contrib_bullets:
+        p_b = doc.add_paragraph(style='List Bullet')
+        p_b.paragraph_format.space_after = Pt(3)
+        r1 = p_b.add_run(title)
+        r1.font.bold = True
+        r1.font.size = Pt(9)
+        r2 = p_b.add_run(desc)
+        r2.font.size = Pt(9)
+
+    doc.add_paragraph()
+
+    # Section 4: Requirement Matrix
     h3 = doc.add_paragraph()
     r_h3 = h3.add_run("3. Core Features & Requirement Verification")
     r_h3.font.bold = True
@@ -169,16 +218,30 @@ def create_docx_report():
         r_stat = p2.add_run(status)
         r_stat.font.size = Pt(8.5)
         r_stat.font.bold = True
-        r_stat.font.color.rgb = RGBColor(0x16, 0xA3, 0x4A)
+        r_stat.font.color.rgb = RGBColor(0x16, 0xA3, 0xA4)
 
     doc.add_paragraph()
 
-    # Section 4: Database Inspection Commands
+    # Section 5: Application Screenshots & Demonstration Placeholders
     h4 = doc.add_paragraph()
-    r_h4 = h4.add_run("4. Database Verification Commands (SSH Host)")
+    r_h4 = h4.add_run("4. Application Screenshots & Visual Proof")
     r_h4.font.bold = True
     r_h4.font.size = Pt(13)
     r_h4.font.color.rgb = RGBColor(0x1E, 0x1B, 0x4B)
+
+    add_screenshot_box(doc, "Screenshot 1: Real-Time Chat Interface on http://10.1.75.51:5237/ showing multi-user chat, dynamic avatars, and live typing indicator")
+    add_screenshot_box(doc, "Screenshot 2: User Join Modal & Unique Username Validation Screen")
+    add_screenshot_box(doc, "Screenshot 3: Terminal output of SQLite database inspection showing stored AES-256-GCM encrypted messages & Ed25519 signatures")
+    add_screenshot_box(doc, "Screenshot 4: SSH Server Host Process Running (nohup python3 server.py) on student@10.1.75.51:2237")
+
+    doc.add_paragraph()
+
+    # Section 6: Database Inspection Commands
+    h5 = doc.add_paragraph()
+    r_h5 = h5.add_run("5. Database Verification Commands (SSH Host)")
+    r_h5.font.bold = True
+    r_h5.font.size = Pt(13)
+    r_h5.font.color.rgb = RGBColor(0x1E, 0x1B, 0x4B)
 
     p_cmd = doc.add_paragraph()
     r_c1 = p_cmd.add_run("To inspect encrypted messages and signatures in SQLite:\n")
@@ -195,12 +258,12 @@ def create_docx_report():
 
     doc.add_paragraph()
 
-    # Section 5: Submission Links
-    h5 = doc.add_paragraph()
-    r_h5 = h5.add_run("5. Official Submission Links")
-    r_h5.font.bold = True
-    r_h5.font.size = Pt(13)
-    r_h5.font.color.rgb = RGBColor(0x1E, 0x1B, 0x4B)
+    # Section 7: Submission Links
+    h6 = doc.add_paragraph()
+    r_h6 = h6.add_run("6. Official Submission Links")
+    r_h6.font.bold = True
+    r_h6.font.size = Pt(13)
+    r_h6.font.color.rgb = RGBColor(0x1E, 0x1B, 0x4B)
 
     p_links = doc.add_paragraph()
     p_links.add_run("• GitHub Repository: ").font.size = Pt(9.5)
