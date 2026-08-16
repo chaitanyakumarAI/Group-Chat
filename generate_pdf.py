@@ -97,7 +97,7 @@ def create_report():
 
     # Document Header
     story.append(Paragraph("Real-Time Group Chat Application", title_style))
-    story.append(Paragraph("Computer System Design (CSD) — Assignment 4 | Comprehensive Technical & Team Contribution Report", subtitle_style))
+    story.append(Paragraph("Computer System Design (CSD) — Assignment 4 | Persistence, Security & Verification Report", subtitle_style))
     story.append(HRFlowable(width="100%", thickness=1.5, color=SECONDARY, spaceAfter=10))
 
     # General Information Table
@@ -155,42 +155,13 @@ def create_report():
     story.append(t_team)
     story.append(Spacer(1, 8))
 
-    # Section 3: Feature Verification Matrix
-    story.append(Paragraph("3. Feature Coverage & Requirement Verification", heading1_style))
-    req_data = [
-        ["Requirement / Feature", "Implementation Mechanism", "Status"],
-        ["Real-Time Message Broadcast", "Bi-directional WebSocket event broadcasting via Flask-SocketIO", "VERIFIED"],
-        ["User Join/Leave Alerts", "Automatic broadcast of user arrival/departure pills to room", "VERIFIED"],
-        ["User Identification", "Unique username validation & dynamic gradient avatar generation", "VERIFIED"],
-        ["Client Disconnection Cleanup", "Server socket connection monitoring & cleanup on tab close", "VERIFIED"],
-        ["SQLite Persistence", "All messages saved in chat.db; auto-loaded upon joining chat", "VERIFIED"],
-        ["Confidentiality (AES-256-GCM)", "Payload encrypted with room key prior to database insertion", "VERIFIED"],
-        ["Authenticity (Ed25519)", "Cryptographic digital signature per user stored & verified", "VERIFIED"],
-        ["Public TA Access URL", "Mapped external port forwarded to http://10.1.75.51:5237/", "VERIFIED"]
-    ]
-    t_req = Table(req_data, colWidths=[130, 320, 80])
-    t_req.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), SECONDARY),
-        ('TEXTCOLOR', (0,0), (-1,0), colors.white),
-        ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
-        ('FONTSIZE', (0,0), (-1,-1), 7.5),
-        ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#94a3b8")),
-        ('INNERGRID', (0,0), (-1,-1), 0.5, colors.HexColor("#cbd5e1")),
-        ('PADDING', (0,0), (-1,-1), 3),
-        ('TEXTCOLOR', (2,1), (2,-1), colors.HexColor("#16a34a")),
-        ('FONTNAME', (2,1), (2,-1), 'Helvetica-Bold'),
-        ('ALIGN', (2,0), (2,-1), 'CENTER')
-    ]))
-    story.append(t_req)
-    story.append(Spacer(1, 8))
-
-    # Section 4: Application Screenshots & Demonstration Placeholders
-    story.append(Paragraph("4. Application Screenshots & Visual Proof Placeholders", heading1_style))
+    # Section 3: Key Technical Demonstrations & Screenshots
+    story.append(Paragraph("3. Demonstrations: Persistence, Tamper Detection & Signatures", heading1_style))
     shots = [
-        "Screenshot 1 Placeholder: Real-Time Chat Interface on http://10.1.75.51:5237/ (Multi-user chat & active sidebar)",
-        "Screenshot 2 Placeholder: User Join Modal & Unique Username Validation Screen",
-        "Screenshot 3 Placeholder: SQLite Database Inspection Terminal (showing AES-256-GCM ciphertexts & Ed25519 signatures)",
-        "Screenshot 4 Placeholder: SSH Host Background Daemon Process Running (nohup python3 server.py)"
+        "Screenshot 1: Real-Time Multi-User Chat UI Demonstration (http://10.1.75.51:5237/)",
+        "Screenshot 2: Demonstration of Message Persistence (Server Process Restart & Auto-History Load)",
+        "Screenshot 3: Demonstration of Tamper Detection (AES-256-GCM Auth Tag Failure via demo_tamper.py)",
+        "Screenshot 4: Demonstration of Signature Verification (Ed25519 Public Keys & Signatures in sqlite3)"
     ]
     for shot in shots:
         p_shot = Paragraph(f"📸 <b>{shot}</b><br/><font color='#94a3b8'>[ Paste Screenshot Here ]</font>", code_style)
@@ -199,19 +170,21 @@ def create_report():
 
     story.append(Spacer(1, 6))
 
-    # Section 5: Database Schema & Query Guide
-    story.append(Paragraph("5. Database Verification Commands (SSH Host)", heading1_style))
+    # Section 4: Database Schema & Query Guide
+    story.append(Paragraph("4. Database Verification Commands (SSH Host)", heading1_style))
     db_text = (
         "<b>To inspect encrypted messages and signatures in SQLite:</b><br/>"
         "<code>sqlite3 ~/chat_app/chat.db \"SELECT id, sender, ciphertext, signature, timestamp FROM messages;\"</code><br/>"
         "<b>To verify public Ed25519 user signing keys:</b><br/>"
-        "<code>sqlite3 ~/chat_app/chat.db \"SELECT username, public_key FROM signing_keys;\"</code>"
+        "<code>sqlite3 ~/chat_app/chat.db \"SELECT username, public_key FROM signing_keys;\"</code><br/>"
+        "<b>To trigger Tamper Detection test:</b><br/>"
+        "<code>python3 ~/chat_app/demo_tamper.py</code>"
     )
     story.append(Paragraph(db_text, body_style))
     story.append(Spacer(1, 8))
 
-    # Section 6: Submission Links
-    story.append(Paragraph("6. Official Submission Details", heading1_style))
+    # Section 5: Submission Links
+    story.append(Paragraph("5. Official Submission Details", heading1_style))
     links_text = (
         "• <b>GitHub Repository:</b> <font color='#0284c7'><u>https://github.com/chaitanyakumarAI/Group-Chat</u></font><br/>"
         "• <b>Live Application URL (For TA Testing):</b> <font color='#0284c7'><b>http://10.1.75.51:5237/</b></font><br/>"

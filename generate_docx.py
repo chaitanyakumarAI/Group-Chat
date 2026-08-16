@@ -11,7 +11,7 @@ def set_cell_background(cell, fill_hex):
     shd = parse_xml(f'<w:shd {nsdecls("w")} w:fill="{fill_hex}"/>')
     tcPr.append(shd)
 
-def add_screenshot_box(doc, caption_text):
+def add_screenshot_box(doc, title_text, instruction_text):
     tbl = doc.add_table(rows=1, cols=1)
     tbl.alignment = WD_TABLE_ALIGNMENT.CENTER
     cell = tbl.rows[0].cells[0]
@@ -19,21 +19,26 @@ def add_screenshot_box(doc, caption_text):
     
     p = cell.paragraphs[0]
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p.paragraph_format.space_before = Pt(12)
+    p.paragraph_format.space_before = Pt(10)
     p.paragraph_format.space_after = Pt(6)
     
-    r1 = p.add_run("📸 " + caption_text + "\n")
+    r1 = p.add_run("📸 " + title_text + "\n")
     r1.font.bold = True
-    r1.font.size = Pt(9.5)
+    r1.font.size = Pt(10)
     r1.font.color.rgb = RGBColor(0x02, 0x84, 0xC7)
     
-    r2 = p.add_run("[ Paste Screenshot Here ]")
-    r2.font.italic = True
-    r2.font.size = Pt(9)
-    r2.font.color.rgb = RGBColor(0x94, 0xA3, 0xB8)
+    r2 = p.add_run(instruction_text + "\n\n")
+    r2.font.size = Pt(8.5)
+    r2.font.color.rgb = RGBColor(0x47, 0x55, 0x69)
+
+    r3 = p.add_run("[ Paste Screenshot Here ]")
+    r3.font.italic = True
+    r3.font.bold = True
+    r3.font.size = Pt(9)
+    r3.font.color.rgb = RGBColor(0x94, 0xA3, 0xB8)
     
     p_spacer = doc.add_paragraph()
-    p_spacer.paragraph_format.space_after = Pt(6)
+    p_spacer.paragraph_format.space_after = Pt(4)
 
 def create_docx_report():
     doc_path = os.path.join(os.path.dirname(__file__), "Group_Chat_Architecture_Report.docx")
@@ -56,12 +61,12 @@ def create_docx_report():
     r_title.font.color.rgb = RGBColor(0x1E, 0x1B, 0x4B)
 
     p_sub = doc.add_paragraph()
-    r_sub = p_sub.add_run("Computer System Design (CSD) — Assignment 4 | Comprehensive Technical & Team Contribution Report")
+    r_sub = p_sub.add_run("Computer System Design (CSD) — Assignment 4 | Persistence, Security & Verification Report")
     r_sub.font.name = "Arial"
     r_sub.font.size = Pt(11)
     r_sub.font.color.rgb = RGBColor(0x4F, 0x46, 0xE5)
 
-    doc.add_paragraph() # Spacer
+    doc.add_paragraph()
 
     # Quick Info Box Table
     info_table = doc.add_table(rows=3, cols=2)
@@ -154,37 +159,45 @@ def create_docx_report():
 
     doc.add_paragraph()
 
-    # Section 3: Detailed Individual Responsibilities Breakdown
-    h2_sub = doc.add_paragraph()
-    r_h2sub = h2_sub.add_run("Detailed Task Breakdown:")
-    r_h2sub.font.bold = True
-    r_h2sub.font.size = Pt(11)
-    r_h2sub.font.color.rgb = RGBColor(0x4F, 0x46, 0xE5)
-
-    contrib_bullets = [
-        ("Ranga Chandra Naga Venkata Chaitanya Kumar (12341740): ", "Designed the core Flask-SocketIO architecture, implemented server-side room management, integrated AES-256-GCM symmetric encryption and per-user Ed25519 digital signature signing/verification, and managed SSH server deployment on student@10.1.75.51:2237."),
-        ("Bhukya Raju (12340520): ", "Developed the single-page responsive UI using HTML5, CSS3, and JavaScript, designed the Cyberpunk Aurora dark-mode glassmorphic theme with glowing ambient mesh blobs, and created dynamic user avatar color generators."),
-        ("V.G.N. Harshitha (12342310): ", "Architected the SQLite database layer (chat.db) with tables for messages and user public keys, implemented message history pre-loading on user join, and ensured data integrity during server restarts."),
-        ("Maloth Madhu (12341370): ", "Executed end-to-end integration testing across 4 lab client SSH machines, verified port forwarding (5000 -> 5237), implemented edge-case socket disconnection handling, and documented SQLite database inspection queries.")
-    ]
-
-    for title, desc in contrib_bullets:
-        p_b = doc.add_paragraph(style='List Bullet')
-        p_b.paragraph_format.space_after = Pt(3)
-        r1 = p_b.add_run(title)
-        r1.font.bold = True
-        r1.font.size = Pt(9)
-        r2 = p_b.add_run(desc)
-        r2.font.size = Pt(9)
-
-    doc.add_paragraph()
-
-    # Section 4: Requirement Matrix
+    # Section 3: Key Technical Demonstrations & Screenshots
     h3 = doc.add_paragraph()
-    r_h3 = h3.add_run("3. Core Features & Requirement Verification")
+    r_h3 = h3.add_run("3. Demonstrations: Persistence, Tamper Detection & Signatures")
     r_h3.font.bold = True
     r_h3.font.size = Pt(13)
     r_h3.font.color.rgb = RGBColor(0x1E, 0x1B, 0x4B)
+
+    add_screenshot_box(
+        doc,
+        "Screenshot 1: Real-Time Multi-User Chat UI Demonstration",
+        "Demonstrates active chat on http://10.1.75.51:5237/ with multiple client connections, dynamic gradient avatars, and live typing status."
+    )
+
+    add_screenshot_box(
+        doc,
+        "Screenshot 2: Demonstration of Message Persistence (Server Restart)",
+        "Demonstrates persistence: The python3 server.py process was terminated and restarted. Upon client reconnection, all historical messages were automatically loaded from SQLite (chat.db)."
+    )
+
+    add_screenshot_box(
+        doc,
+        "Screenshot 3: Demonstration of Tamper Detection (AES-256-GCM Auth Tag Failure)",
+        "Demonstrates Tamper Detection: After corrupting 1 byte of stored ciphertext in chat.db using demo_tamper.py, AES-256-GCM authentication tag verification failed, displaying [TAMPER DETECTED: ciphertext/authentication tag invalid]."
+    )
+
+    add_screenshot_box(
+        doc,
+        "Screenshot 4: Demonstration of Signature Verification (Ed25519)",
+        "Demonstrates Digital Signatures: Terminal output of sqlite3 ~/chat_app/chat.db showing per-user Ed25519 public keys in signing_keys table and raw cryptographic signatures in messages table."
+    )
+
+    doc.add_paragraph()
+
+    # Section 4: Requirement Verification Table
+    h4 = doc.add_paragraph()
+    r_h4 = h4.add_run("4. Core Features & Requirement Verification Matrix")
+    r_h4.font.bold = True
+    r_h4.font.size = Pt(13)
+    r_h4.font.color.rgb = RGBColor(0x1E, 0x1B, 0x4B)
 
     req_table = doc.add_table(rows=9, cols=3)
     req_table.alignment = WD_TABLE_ALIGNMENT.CENTER
@@ -202,9 +215,9 @@ def create_docx_report():
         ("User Join/Leave Alerts", "Automatic broadcast of user arrival/departure pills to room", "VERIFIED"),
         ("User Identification", "Unique username validation & dynamic gradient avatar generation", "VERIFIED"),
         ("Client Disconnection Cleanup", "Server socket connection monitoring & cleanup on tab close", "VERIFIED"),
-        ("SQLite Persistence", "All messages saved in chat.db; auto-loaded upon joining chat", "VERIFIED"),
-        ("Confidentiality (AES-256-GCM)", "Payload encrypted with room key prior to database insertion", "VERIFIED"),
-        ("Authenticity (Ed25519)", "Cryptographic digital signature per user stored & verified", "VERIFIED"),
+        ("SQLite Message Persistence", "All messages saved in chat.db; auto-loaded upon joining chat", "VERIFIED"),
+        ("Tamper Detection (AES-GCM)", "Payload encrypted with room key prior to database insertion; auth tag verified on read", "VERIFIED"),
+        ("Digital Signatures (Ed25519)", "Cryptographic digital signature per user stored & verified against public key", "VERIFIED"),
         ("Public TA Access URL", "Mapped external port forwarded to http://10.1.75.51:5237/", "VERIFIED")
     ]
 
@@ -218,47 +231,39 @@ def create_docx_report():
         r_stat = p2.add_run(status)
         r_stat.font.size = Pt(8.5)
         r_stat.font.bold = True
-        r_stat.font.color.rgb = RGBColor(0x16, 0xA3, 0xA4)
+        r_stat.font.color.rgb = RGBColor(0x16, 0xA3, 0x4A)
 
     doc.add_paragraph()
 
-    # Section 5: Application Screenshots & Demonstration Placeholders
-    h4 = doc.add_paragraph()
-    r_h4 = h4.add_run("4. Application Screenshots & Visual Proof")
-    r_h4.font.bold = True
-    r_h4.font.size = Pt(13)
-    r_h4.font.color.rgb = RGBColor(0x1E, 0x1B, 0x4B)
-
-    add_screenshot_box(doc, "Screenshot 1: Real-Time Chat Interface on http://10.1.75.51:5237/ showing multi-user chat, dynamic avatars, and live typing indicator")
-    add_screenshot_box(doc, "Screenshot 2: User Join Modal & Unique Username Validation Screen")
-    add_screenshot_box(doc, "Screenshot 3: Terminal output of SQLite database inspection showing stored AES-256-GCM encrypted messages & Ed25519 signatures")
-    add_screenshot_box(doc, "Screenshot 4: SSH Server Host Process Running (nohup python3 server.py) on student@10.1.75.51:2237")
-
-    doc.add_paragraph()
-
-    # Section 6: Database Inspection Commands
+    # Section 5: Commands to Reproduce & Verify Screenshots
     h5 = doc.add_paragraph()
-    r_h5 = h5.add_run("5. Database Verification Commands (SSH Host)")
+    r_h5 = h5.add_run("5. Commands to Reproduce & Verify Tests on SSH Server")
     r_h5.font.bold = True
     r_h5.font.size = Pt(13)
     r_h5.font.color.rgb = RGBColor(0x1E, 0x1B, 0x4B)
 
     p_cmd = doc.add_paragraph()
-    r_c1 = p_cmd.add_run("To inspect encrypted messages and signatures in SQLite:\n")
+    r_c1 = p_cmd.add_run("1. To inspect stored encrypted messages & Ed25519 signatures:\n")
     r_c1.font.size = Pt(9)
     r_c2 = p_cmd.add_run("sqlite3 ~/chat_app/chat.db \"SELECT id, sender, ciphertext, signature, timestamp FROM messages;\"\n\n")
     r_c2.font.name = "Consolas"
     r_c2.font.size = Pt(8.5)
 
-    r_c3 = p_cmd.add_run("To verify public Ed25519 user signing keys:\n")
+    r_c3 = p_cmd.add_run("2. To verify user Ed25519 public keys:\n")
     r_c3.font.size = Pt(9)
-    r_c4 = p_cmd.add_run("sqlite3 ~/chat_app/chat.db \"SELECT username, public_key FROM signing_keys;\"")
+    r_c4 = p_cmd.add_run("sqlite3 ~/chat_app/chat.db \"SELECT username, public_key FROM signing_keys;\"\n\n")
     r_c4.font.name = "Consolas"
     r_c4.font.size = Pt(8.5)
 
+    r_c5 = p_cmd.add_run("3. To trigger Tamper Detection for Screenshot 3:\n")
+    r_c5.font.size = Pt(9)
+    r_c6 = p_cmd.add_run("python3 ~/chat_app/demo_tamper.py")
+    r_c6.font.name = "Consolas"
+    r_c6.font.size = Pt(8.5)
+
     doc.add_paragraph()
 
-    # Section 7: Submission Links
+    # Section 6: Submission Links
     h6 = doc.add_paragraph()
     r_h6 = h6.add_run("6. Official Submission Links")
     r_h6.font.bold = True

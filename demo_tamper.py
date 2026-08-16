@@ -1,41 +1,43 @@
 """
-Tamper-Detection Demo Helper
------------------------------
-Run this AFTER stopping the server and sending at least one chat message.
-It flips a byte inside the stored ciphertext of the most recent message,
-directly in the SQLite database — simulating an attacker (or a disk error)
-modifying stored data.
-
-Usage:
-    1. python3 server.py            # send a message from the browser, then Ctrl+C
-    2. python3 demo_tamper.py       # corrupts the last message's ciphertext
-    3. python3 server.py            # restart, rejoin -> history shows
-                                     #   "⚠ TAMPER DETECTED"
+Demo Tamper Script for Assignment 4 Verification
+Tampers with 1 byte of AES-GCM ciphertext in chat.db to demonstrate Tamper Detection.
 """
-
 import sqlite3
-import base64
 import os
 
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "chat.db")
 
-conn = sqlite3.connect(DB_PATH)
-row = conn.execute(
-    "SELECT id, sender, ciphertext FROM messages ORDER BY id DESC LIMIT 1"
-).fetchone()
+def tamper_message():
+    if not os.path.exists(DB_PATH):
+        print(f"Error: {DB_PATH} does not exist. Run the server first and send a message.")
+        return
 
-if not row:
-    print("No messages found. Send a chat message first, then re-run this script.")
-else:
-    msg_id, sender, ciphertext_b64 = row
-    raw = bytearray(base64.b64decode(ciphertext_b64))
-    raw[0] ^= 0xFF  # flip every bit in the first byte -> corrupts the AES-GCM tag/data
-    tampered_b64 = base64.b64encode(bytes(raw)).decode()
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, sender, ciphertext FROM messages ORDER BY id DESC LIMIT 1")
+    row = cursor.fetchone()
 
-    conn.execute("UPDATE messages SET ciphertext = ? WHERE id = ?", (tampered_b64, msg_id))
+    if not row:
+        print("No messages found in chat.db to tamper with.")
+        conn.close()
+        return
+
+    msg_id, sender, ciphertext = row
+    # Corrupt last character of base64 ciphertext
+    corrupted_char = 'Z' if ciphertext[-1] != 'Z' else 'A'
+    tampered_ciphertext = ciphertext[:-1] + corrupted_char
+
+    cursor.execute("UPDATE messages SET ciphertext = ? WHERE id = ?", (tampered_ciphertext, msg_id))
     conn.commit()
+    conn.close()
 
-    print(f"Tampered with message id={msg_id} from '{sender}'.")
-    print("Restart the server and rejoin the chat to see the tamper warning in history.")
+    print("=" * 60)
+    print(f"SUCCESSFULLY TAMPERED WITH MESSAGE ID: {msg_id} (Sender: {sender})")
+    print(f"Original Ciphertext : {ciphertext}")
+    print(f"Tampered Ciphertext : {tampered_ciphertext}")
+    print("When you refresh the chat or load history, server will flag:")
+    print("[TAMPER DETECTED: ciphertext/authentication tag invalid]")
+    print("=" * 60)
 
-conn.close()
+if __name__ == "__main__":
+    tamper_message()
