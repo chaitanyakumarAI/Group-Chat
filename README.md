@@ -26,7 +26,7 @@ A real-time, multi-client Group Chat Application built using **Flask**, **Flask-
 - **Student 3 Client**: `ssh -p 2239 student@10.1.75.51`
 - **Student 4 Client**: `ssh -p 2240 student@10.1.75.51`
 - **Live Client Testing URL**: **`http://10.1.75.51:5237/`** *(Mapped from SSH Port 2237)*
-
+  
 ---
 
 ## 🛠️ Quick Start
