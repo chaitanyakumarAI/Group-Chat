@@ -7,6 +7,16 @@ A real-time, multi-client Group Chat Application built using **Flask**, **Flask-
 ![WebSockets](https://img.shields.io/badge/WebSockets-Flask--SocketIO-emerald)
 ![Security](https://img.shields.io/badge/Security-AES--256--GCM%20%7C%20Ed25519-purple)
 
+## 🌐 Live Deployment
+
+This app is currently deployed and verified on the allotted lab host:
+
+- **Host**: `stu29_sys1` (`ssh -p 2313 student@10.1.75.51`)
+- **Live URL**: `http://10.1.75.51:5313`
+- **Full verification log**: see [`TESTING.md`](./TESTING.md) for step-by-step
+  confirmation of persistence, encryption, tamper detection, and signature
+  verification against this deployment.
+
 ---
 
 ## 🌟 Key Features
