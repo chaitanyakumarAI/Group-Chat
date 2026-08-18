@@ -21,11 +21,11 @@ A real-time, multi-client Group Chat Application built using **Flask**, **Flask-
 
 ## 🚀 Allotted SSH Server & Deployment Details
 
-- **Student 1 (Host Server)**: `ssh -p 2237 student@10.1.75.51`
-- **Student 2 Client**: `ssh -p 2238 student@10.1.75.51`
-- **Student 3 Client**: `ssh -p 2239 student@10.1.75.51`
-- **Student 4 Client**: `ssh -p 2240 student@10.1.75.51`
-- **Live Client Testing URL**: **`http://10.1.75.51:5237/`** *(Mapped from SSH Port 2237)*
+- **Student 1 (Host Server)**: `ssh -p 2313 student@10.1.75.51`
+- **Student 2 Client**: `ssh -p 2314 student@10.1.75.51`
+- **Student 3 Client**: `ssh -p 2315 student@10.1.75.51`
+- **Student 4 Client**: `ssh -p 2316 student@10.1.75.51`
+- **Live Client Testing URL**: **`http://10.1.75.51:5313/`** *(Mapped from SSH Port 2313)*
   
 ---
 
